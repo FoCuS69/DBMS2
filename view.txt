@@ -1,0 +1,79 @@
+mysql> create database emp;
+ERROR 1007 (HY000): Can't create database 'emp'; database exists
+mysql> use emp;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+ 
+Database changed
+mysql> create table emp_a(emi_id int(10),emp_name varchar(20),emp_salary int(50));
+Query OK, 0 rows affected, 2 warnings (0.89 sec)
+ 
+mysql> select *from emp_a;
+Empty set (0.00 sec)
+ 
+ 
+mysql>  insert into emp_a(emi_id,emp_name,emp_salary)values(1,'Ram',10000),(2,'Ravi',50000),(3,'Dipak',40000);
+Query OK, 3 rows affected (0.16 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+ 
+mysql> select *from emp_a;
++--------+----------+------------+
+| emi_id | emp_name | emp_salary |
++--------+----------+------------+
+|      1 | Ram      |      10000 |
+|      2 | Ravi     |      50000 |
+|      3 | Dipak    |      40000 |
++--------+----------+------------+
+3 rows in set (0.01 sec)
+ 
+mysql> create table emp_b(emp_id int(10),emp_name varchar(20),emp_salary int(50));
+Query OK, 0 rows affected, 2 warnings (1.55 sec)
+ 
+ 
+mysql> select *from emp_b;
++--------+----------+------------+
+| emp_id | emp_name | emp_salary |
++--------+----------+------------+
+|      4 | asha     |      20000 |
+|      3 | Ravin    |      60000 |
+|      4 | Dipika   |     420000 |
++--------+----------+------------+
+3 rows in set (0.00 sec)
+ 
+ 
+mysql> create VIEW emp1 AS select emp_id,emp_salary from emp_b where emp_salary>10000;
+Query OK, 0 rows affected (0.22 sec)
+ 
+mysql> select *from emp_b;
++--------+----------+------------+
+| emp_id | emp_name | emp_salary |
++--------+----------+------------+
+|      4 | asha     |      20000 |
+|      3 | Ravin    |      60000 |
+|      4 | Dipika   |     420000 |
++--------+----------+------------+
+3 rows in set (0.00 sec)
+ 
+ 
+mysql> create INDEX emp_idx ON emp_a(emi_id,emp_salary);
+Query OK, 0 rows affected (1.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+ 
+mysql> select *from emp_a;
++--------+----------+------------+
+| emi_id | emp_name | emp_salary |
++--------+----------+------------+
+|      1 | Ram      |      10000 |
+|      2 | Ravi     |      50000 |
+|      3 | Dipak    |      40000 |
++--------+----------+------------+
+3 rows in set (0.00 sec)
+ 
+mysql> show index from emp_a;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| emp_a |          1 | emp_idx  |            1 | emi_id      | A         |           3 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| emp_a |          1 | emp_idx  |            2 | emp_salary  | A         |           3 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.20 sec)

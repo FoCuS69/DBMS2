@@ -1,0 +1,104 @@
+mysql> create database trig1;
+Query OK, 1 row affected (0.14 sec)
+ 
+mysql> use trig1;
+Database changed
+ 
+mysql> create table lib_book(bid int(20),bname varchar(50),qty int(10));
+Query OK, 0 rows affected, 2 warnings (0.77 sec)
+ 
+mysql> insert into lib_book(bid,bname,qty)values(1,"DBMS",10);
+Query OK, 1 row affected (0.12 sec)
+ 
+mysql> insert into lib_book(bid,bname,qty)values(2,"DSA",20);
+Query OK, 1 row affected (0.11 sec)
+ 
+mysql> insert into lib_book(bid,bname,qty)values(3,"CNS",30);
+Query OK, 1 row affected (0.08 sec)
+ 
+mysql> select * from lib_book;
++------+-------+------+
+| bid  | bname | qty  |
++------+-------+------+
+|    1 | DBMS  |   10 |
+|    2 | DSA   |   20 |
+|    3 | CNS   |   30 |
++------+-------+------+
+3 rows in set (0.00 sec)
+ 
+mysql> create table lib_Audit(bid int(20),bname varchar(50),qty int(10));
+Query OK, 0 rows affected, 2 warnings (0.88 sec)
+ 
+mysql> drop trigger if exists Make_audit1;
+Query OK, 0 rows affected, 1 warning (0.05 sec)
+ 
+mysql> drop trigger if exists Make_audit1;
+   ->
+   -> delimiter //
+Query OK, 0 rows affected (0.25 sec)
+ 
+mysql>
+mysql> CREATE TRIGGER Make_audit1
+   ->   AFTER DELETE ON lib_book
+   ->   FOR EACH ROW
+   -> BEGIN
+   ->   INSERT INTO lib_Audit (bid, bname, qty)
+   ->   VALUES (OLD.bid, OLD.bname,OLD.qty);
+   -> END;
+   -> //
+Query OK, 0 rows affected (0.19 sec)
+ 
+mysql> delete from lib_book where bid=2;
+   -> //
+Query OK, 1 row affected (0.26 sec)
+ 
+mysql> select * from lib_Audit;
+   -> //
++------+-------+------+
+| bid  | bname | qty  |
++------+-------+------+
+|    2 | DSA   |   20 |
++------+-------+------+
+1 row in set (0.01 sec)
+ 
+mysql> drop trigger if exists Make_audit2;
+   ->
+   -> delimiter //
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+ 
+mysql>
+mysql> CREATE TRIGGER Make_audit2
+   ->   AFTER UPDATE ON lib_book
+   ->   FOR EACH ROW
+   -> BEGIN
+   ->   INSERT INTO lib_Audit (bid, bname, qty)
+   ->   VALUES (OLD.bid, OLD.bname,OLD.qty);
+   -> END;
+   -> //
+Query OK, 0 rows affected (0.16 sec)
+ 
+mysql>
+mysql> delimiter ;
+mysql> update lib_book SET bid=2 where bid=3;
+Query OK, 1 row affected (0.14 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+ 
+mysql> select *from lib_book;
++------+-------+------+
+| bid  | bname | qty  |
++------+-------+------+
+|    1 | DBMS  |   10 |
+|    2 | CNS   |   30 |
++------+-------+------+
+2 rows in set (0.00 sec)
+ 
+mysql> select *from lib_Audit;
++------+-------+------+
+| bid  | bname | qty  |
++------+-------+------+
+|    2 | DSA   |   20 |
+|    3 | CNS   |   30 |
++------+-------+------+
+2 rows in set (0.01 sec)
+ 
+mysql>

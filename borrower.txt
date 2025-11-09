@@ -1,0 +1,115 @@
+mysql> create database borrower;
+Query OK, 1 row affected (0.18 sec)
+ 
+mysql> use borrower;
+Database changed
+mysql> create table B_info(roll_no int(10),name varchar(20),DOI date,nameofbook varchar(40),status varchar(30));
+Query OK, 0 rows affected, 1 warning (1.35 sec)
+ 
+mysql> insert into B_info(roll_no,name,DOI,nameofbook,status)values(1,"harshali",'2023-08-04',"DBMS","issued");
+Query OK, 1 row affected (0.11 sec)
+ 
+mysql> insert into B_info(roll_no,name,DOI,nameofbook,status)values(2,"harsh",'2023-08-04',"TOC","issued");
+Query OK, 1 row affected (0.13 sec)
+ 
+mysql> insert into B_info(roll_no,name,DOI,nameofbook,status)values(3,"smita",'2023-08-04',"CNS","issued");
+Query OK, 1 row affected (0.11 sec)
+ 
+mysql> select * from B_info;
++---------+----------+------------+------------+--------+
+| roll_no | name     | DOI        | nameofbook | status |
++---------+----------+------------+------------+--------+
+|       1 | harshali | 2023-08-04 | DBMS       | issued |
+|       2 | harsh    | 2023-08-04 | TOC        | issued |
+|       3 | smita    | 2023-08-04 | CNS        | issued |
++---------+----------+------------+------------+--------+
+3 rows in set (0.00 sec)
+ 
+mysql> create table Fine(Roll_no int(10)sDate date,Amt int(20));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sDate date,Amt int(20))' at line 1
+mysql> create table Fine(roll_no int(10)sDate date,Amt int(30));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sDate date,Amt int(30))' at line 1
+mysql> create table Fine(roll_no int(10),sDate date,Amt int(20));
+Query OK, 0 rows affected, 2 warnings (1.24 sec)
+ 
+mysql> select * from Fine;
+Empty set (0.00 sec)
+ 
+mysql> drop procedure if exists p_fine;
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+ 
+mysql>
+mysql>     delimiter //
+mysql>
+mysql>     create procedure p_fine(IN rno int,IN  bname varchar(20))
+   ->     begin
+   ->        declare d1 date;    
+   ->        declare daycnt int;
+   ->        declare fine_amt int;
+   ->    
+   ->         SELECT DOI  into d1 FROM B_info  WHERE Roll_no = rno and  nameofbook  = bname;
+   ->      
+   ->         select DATEDIFF(now(),d1) into daycnt;
+   ->        
+   ->          if(daycnt >= 15 and daycnt <= 30) then
+   ->          
+   ->                set fine_amt := daycnt * 5;
+   ->            
+   ->                  insert into Fine(roll_no,sDate,Amt) values (rno,now(),fine_amt);
+   ->                                                    
+   ->                  update B_info set status = 'R' where roll_no = rno;
+   ->                  
+   ->        ELSEIF(daycnt > 30) then
+   ->        
+   ->                 set fine_amt := daycnt * 50;
+   ->            
+   ->                  insert into Fine(roll_no,sDate,Amt) values (rno,now(),fine_amt);
+   ->                                                    
+   ->                  update B_info set status = 'R' where roll_no = rno;
+   ->                  
+   ->          else      
+   ->                           update B_info set status = 'R' where roll_no = rno;              
+   ->          end if;    
+   ->      end;
+   -> //
+Query OK, 0 rows affected (0.16 sec)
+ 
+mysql>
+mysql> delimiter ;
+mysql> call p_fine(1,"DBMS");
+Query OK, 1 row affected (0.21 sec)
+ 
+mysql> select *from Fine;
++---------+------------+-------+
+| roll_no | sDate      | Amt   |
++---------+------------+-------+
+|       1 | 2025-11-06 | 41250 |
++---------+------------+-------+
+1 row in set (0.00 sec)
+ 
+mysql> call p_fine(2,"TOC");
+Query OK, 1 row affected (0.27 sec)
+ 
+mysql> select *from Fine;
++---------+------------+-------+
+| roll_no | sDate      | Amt   |
++---------+------------+-------+
+|       1 | 2025-11-06 | 41250 |
+|       2 | 2025-11-06 | 41250 |
++---------+------------+-------+
+2 rows in set (0.00 sec)
+ 
+mysql> call p_fine(3,"CNS");
+Query OK, 1 row affected (0.34 sec)
+ 
+mysql> select *from Fine;
++---------+------------+-------+
+| roll_no | sDate      | Amt   |
++---------+------------+-------+
+|       1 | 2025-11-06 | 41250 |
+|       2 | 2025-11-06 | 41250 |
+|       3 | 2025-11-06 | 41250 |
++---------+------------+-------+
+3 rows in set (0.00 sec)
+ 
+mysql>

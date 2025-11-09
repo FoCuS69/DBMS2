@@ -1,0 +1,204 @@
+mysql> create database circle2;
+Query OK, 1 row affected (0.15 sec)
+ 
+mysql> use circle2;
+Database changed
+mysql> create table circle(radius int(20),dimeter int(20),area float(30),circumference float(30));
+Query OK, 0 rows affected, 2 warnings (0.84 sec)
+ 
+mysql> drop procedure if exists circle;
+Query OK, 0 rows affected, 1 warning (0.05 sec)
+ 
+mysql>
+mysql> delimiter //
+mysql>
+mysql> create procedure circle()
+   -> begin
+   ->    declare radius int;
+   ->    declare dimeter int;
+   ->    declare area float;
+   ->    declare circumference float;
+   ->    declare pi float default 3.14;
+   ->
+   ->    set radius:=5;
+   ->  
+   ->    cloop: LOOP
+   ->       set dimeter:= 2*radius;
+   ->       set area:= pi*radius*radius;
+   ->       set circumference:=2*pi*radius;
+   ->    
+   ->       select radius,dimeter,area,circumference;
+   ->       set radius=radius+1;
+   ->       if radius>9 then
+   ->         leave cloop;
+   ->    end if;
+   ->    select radius;
+   ->    select area;
+   ->    select circumference;
+   ->    select dimeter;
+   ->    insert into circle(radius,area,dimeter,circumference) values (radius, area, dimeter,circumference);
+   ->  END LOOP cloop;
+   -> end;
+   ->
+   -> //delimiter ;
+Query OK, 0 rows affected (0.19 sec)
+ 
+   -> call circle();
+   -> exit;
+   ->
+mysql> use circle2
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+ 
+Database changed
+mysql> call circle();
++--------+---------+------+---------------+
+| radius | dimeter | area | circumference |
++--------+---------+------+---------------+
+|      5 |      10 | 78.5 |          31.4 |
++--------+---------+------+---------------+
+1 row in set (0.00 sec)
+ 
++--------+
+| radius |
++--------+
+|      6 |
++--------+
+1 row in set (0.00 sec)
+ 
++------+
+| area |
++------+
+| 78.5 |
++------+
+1 row in set (0.00 sec)
+ 
++---------------+
+| circumference |
++---------------+
+|          31.4 |
++---------------+
+1 row in set (0.00 sec)
+ 
++---------+
+| dimeter |
++---------+
+|      10 |
++---------+
+1 row in set (0.00 sec)
+ 
++--------+---------+--------+---------------+
+| radius | dimeter | area   | circumference |
++--------+---------+--------+---------------+
+|      6 |      12 | 113.04 |         37.68 |
++--------+---------+--------+---------------+
+1 row in set (0.17 sec)
+ 
++--------+
+| radius |
++--------+
+|      7 |
++--------+
+1 row in set (0.17 sec)
+ 
++--------+
+| area   |
++--------+
+| 113.04 |
++--------+
+1 row in set (0.17 sec)
+ 
++---------------+
+| circumference |
++---------------+
+|         37.68 |
++---------------+
+1 row in set (0.17 sec)
+ 
++---------+
+| dimeter |
++---------+
+|      12 |
++---------+
+1 row in set (0.17 sec)
+ 
++--------+---------+--------+---------------+
+| radius | dimeter | area   | circumference |
++--------+---------+--------+---------------+
+|      7 |      14 | 153.86 |         43.96 |
++--------+---------+--------+---------------+
+1 row in set (0.46 sec)
+ 
++--------+
+| radius |
++--------+
+|      8 |
++--------+
+1 row in set (0.46 sec)
+ 
++--------+
+| area   |
++--------+
+| 153.86 |
++--------+
+1 row in set (0.46 sec)
+ 
++---------------+
+| circumference |
++---------------+
+|         43.96 |
++---------------+
+1 row in set (0.46 sec)
+ 
++---------+
+| dimeter |
++---------+
+|      14 |
++---------+
+1 row in set (0.46 sec)
+ 
++--------+---------+--------+---------------+
+| radius | dimeter | area   | circumference |
++--------+---------+--------+---------------+
+|      8 |      16 | 200.96 |         50.24 |
++--------+---------+--------+---------------+
+1 row in set (0.59 sec)
+ 
++--------+
+| radius |
++--------+
+|      9 |
++--------+
+1 row in set (0.59 sec)
+ 
++--------+
+| area   |
++--------+
+| 200.96 |
++--------+
+1 row in set (0.59 sec)
+ 
++---------------+
+| circumference |
++---------------+
+|         50.24 |
++---------------+
+1 row in set (0.59 sec)
+ 
++---------+
+| dimeter |
++---------+
+|      16 |
++---------+
+1 row in set (0.59 sec)
+ 
++--------+---------+--------+---------------+
+| radius | dimeter | area   | circumference |
++--------+---------+--------+---------------+
+|      9 |      18 | 254.34 |         56.52 |
++--------+---------+--------+---------------+
+1 row in set (0.72 sec)
+ 
+Query OK, 0 rows affected (0.72 sec)
+ 
+mysql>

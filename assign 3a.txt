@@ -151,7 +151,10 @@ mysql>
 mysql>
 mysql>
 mysql>
-mysql> select stu_mark.name,marks from stu_mark inner join stu_info on stu_mark.rollno=marks.rollno;
+mysql> select s1.rollno,s1.name,s1.marks,s2.address 
+from stu_mark s1 
+inner join stu_info s2 
+on s1.rollno=s2.rollno;
 ERROR 1054 (42S22): Unknown column 'marks.rollno' in 'on clause'
 mysql>
 mysql>

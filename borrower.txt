@@ -25,10 +25,6 @@ mysql> select * from B_info;
 +---------+----------+------------+------------+--------+
 3 rows in set (0.00 sec)
  
-mysql> create table Fine(Roll_no int(10)sDate date,Amt int(20));
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sDate date,Amt int(20))' at line 1
-mysql> create table Fine(roll_no int(10)sDate date,Amt int(30));
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sDate date,Amt int(30))' at line 1
 mysql> create table Fine(roll_no int(10),sDate date,Amt int(20));
 Query OK, 0 rows affected, 2 warnings (1.24 sec)
  
